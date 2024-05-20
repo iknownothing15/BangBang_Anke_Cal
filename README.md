@@ -10,6 +10,8 @@
 
 ## 用法
 
+如果有不懂的，请发邮件到 dyf_dyf@outlook.com 或者加QQ 2357168416 。
+
 ### Windows 系统
 
 右侧 release 中提供 64 位 windows 操作系统的可执行文件，下载运行即可。
