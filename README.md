@@ -20,11 +20,11 @@
 
 1. 克隆本项目
 ```bash
-git clone https://github.com/ #此处将在项目上传后修正
+git clone https://github.com/iknownothing15/BangBang_Anke_Cal
 ```
 2. 编译
 ```bash
-cd #此处将在项目上传后修正
+cd BangBang_Anke_Cal
 make
 ```
 3. 运行
