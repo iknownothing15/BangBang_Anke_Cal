@@ -14,6 +14,9 @@
  * @brief A namespace that contains functions that interact with the user.
  *
  * I'm not going to add clear comments to each function, They are not important.
+ * 
+ * Interactors is not elegant at all. I have no idea of how to make it better.
+ * It might be changed into GUI of Qt or dotnet in the future. Hope 
  */
 namespace Interactions
 {
@@ -43,27 +46,40 @@ namespace Interactions
         std::cin >> s;
         return s;
     }
+
+    Live_Result read_live_result()
+    {
+        std::cout<<"Notice possible audience score are:"<<std::endl;
+        for(int i=0;i<POSSIBLE_RESULT_SIZE;i++){
+            std::cout<<i<<". "<<STATUS[i]<<std::endl;
+        }
+        int audience_score = read_num("Please input the audience score(0~"+std::to_string(POSSIBLE_RESULT_SIZE-1)+"):", 0, POSSIBLE_RESULT_SIZE-1);
+        int final_performance_score = read_num("Please input the final performance score(0-100):", 0, 100);
+        return Live_Result(audience_score, final_performance_score);
+    }
+
     Band read_band()
     {
-        int member_count;
-        std::string name;
+        int member_count = read_num("Please input the member count of the band(1-10):", 1, 20);
+        std::string name = read_string("Please input the name of the band(No space):");
         std::vector<int> skill, modifier;
-        int performance_score_modifier;
-        member_count = read_num("Please input the member count of the band(1-10):", 1, 20);
-        name = read_string("Please input the name of the band(No space):");
-        for (int i = 0; i < member_count; i++)
-        {
-            std::stringstream desc;
-            desc << "Please input the skill level of the member " << i + 1 << "(0-100):";
-            skill.push_back(read_num(desc.str(), 0, 100));
-        }
-        for (int i = 0; i < member_count; i++)
-        {
-            std::stringstream desc;
-            desc << "Please input the skill modifier of the member " << i + 1 << "(-20-20):";
-            modifier.push_back(read_num(desc.str(), -20, 20));
-        }
-        performance_score_modifier = read_num("Please input the performance score modifier of the band(-20-20):", -20, 20);
+    
+        auto read_member_info = [&](const char* desc, int min, int max) {
+            std::vector<int> info;
+            for (int i = 0; i < member_count; i++)
+            {
+                std::stringstream ss;
+                ss << "Please input the " << desc << " of the member " << i + 1 << "(" << min << "-" << max << "):";
+                info.emplace_back(read_num(ss.str(), min, max));
+            }
+            return info;
+        };
+    
+        skill = read_member_info("skill level", 0, 100);
+        modifier = read_member_info("skill modifier", -20, 20);
+    
+        int performance_score_modifier = read_num("Please input the performance score modifier of the band(-20-20):", -20, 20);
+    
         return Band(member_count, name, skill, modifier, {}, performance_score_modifier);
     }
     void show_result_V(const std::vector<int> &result)
@@ -96,6 +112,12 @@ namespace Interactions
         std::cout<<band.get_name()<<"'s result is:"<<std::endl;
         std::cout<<result.show()<<std::endl;
     }
+    
+    void show_BangBang_over_known_result(Band &band,Live_Result live_result, Random_Generator &G,int times){
+        double result=BangBang_over_known_result(band,live_result,G,times);
+        std::cout<<"The win rate of "<<band.get_name()<<" over the known result is:"<<std::endl;
+        std::cout<<std::fixed<<std::setprecision(2)<<result<<"%"<<std::endl;
+    }
 
     void clear_screen(){
         #ifdef _WIN32
@@ -122,8 +144,9 @@ namespace Interactions
             desc<<"1.add a band"<<std::endl;
             desc<<"2.list all the bands"<<std::endl;
             desc<<"3.show the result of a single live"<<std::endl;
-            desc<<"4.begin Sub-space lives"<<std::endl;
-            int opt=read_num(desc.str(),0,4);
+            desc<<"4.calculate the win rate of two bands"<<std::endl;
+            desc<<"5.calculate the win rate of a band over a known result"<<std::endl;
+            int opt=read_num(desc.str(),0,5);
             //clean the desc
             desc.str("");
             //clean the screen
@@ -151,6 +174,11 @@ namespace Interactions
                     band2_id=read_num("Please input the id of the second band(1-"+std::to_string(Bands.size())+"):",1,Bands.size())-1;
                     show_BangBang_result(Bands[band1_id],Bands[band2_id],G,DEFAULT_MONTCARLO_TIMES);
                     break;
+                case 5:
+                    list_bands(Bands);
+                    band1_id=read_num("Please input the id of the band(1-"+std::to_string(Bands.size())+"):",1,Bands.size())-1;
+                    result=read_live_result();
+                    show_BangBang_over_known_result(Bands[band1_id],result,G,DEFAULT_MONTCARLO_TIMES);
                 default:
                     std::runtime_error("Unreachable code");
             }
