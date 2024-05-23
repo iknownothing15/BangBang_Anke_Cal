@@ -3,7 +3,7 @@
  * @author UnderLine (dyf_dyf@outlook.com)
  * @brief A simulation of the Bangbang game in this Anke passage [https://bbs.nga.cn/read.php?tid=37770479].
  *                                                  ^^^^(I don't know how to translate it into English TAT)
- * @version 1.0 (rev. 2)
+ * @version 1.0.1 (rev. 2)
  * @date 2024-05-17
  *
  * @warning I'm just a student. If you found something wrong in this program, please don't criticize me too much. TAT
