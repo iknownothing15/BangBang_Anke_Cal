@@ -32,7 +32,7 @@ private:
     int member_count;
     std::string name;
     std::vector<int> skill, modifier;
-    std::vector<std::function<Live_Result(Live_Result)>> other_mechanism;
+    std::vector<std::function<Live_Result(Live_Result,int)>> other_mechanism;
     int performance_score_modifier, remedial_chances;
     /**
      * @brief A function that will normalize the performance score based on the member count.
@@ -40,9 +40,9 @@ private:
      * @param normalized_performance_score the original performance score.
      * @return double denoting the normalized performance score.
      */
-    double normalize_performance_score(int normalized_performance_score) const
+    double normalize_performance_score(int performance_score, int temporary_modifier = 0) const
     {
-        return 5.0 * normalized_performance_score / member_count + performance_score_modifier;
+        return 5.0 * performance_score / member_count + performance_score_modifier + temporary_modifier;
     }
 
 public:
@@ -64,12 +64,13 @@ public:
          const std::string &_name,
          const std::vector<int> &_skill,
          const std::vector<int> &_modifier,
-         const std::vector<std::function<Live_Result(Live_Result)>> &_other_mechanism,
+         const std::vector<std::function<Live_Result(Live_Result,int)>> &_other_mechanism,
          const int &_performance_score_modifier)
         : member_count(_member_count),
           name(_name),
           skill(_skill),
           modifier(_modifier),
+
           other_mechanism(_other_mechanism),
           performance_score_modifier(_performance_score_modifier),
           remedial_chances(0)
@@ -84,13 +85,13 @@ public:
         if (avg >= 80 * member_count)
             remedial_chances++;
     }
-    
+
     /**
      * @brief A default constructor.
-     * 
+     *
      */
 
-    Band():member_count(0),name(""),skill({}),modifier({}),other_mechanism({}),performance_score_modifier(0),remedial_chances(0){}
+    Band() : member_count(0), name(""), skill({}), modifier({}), other_mechanism({}), performance_score_modifier(0), remedial_chances(0) {}
 
     /**
      * @brief calculate the score of the band after remedial.
@@ -100,7 +101,7 @@ public:
      * The function will change the results vector, so make sure you know what you are doing.
      * The function uses greedy algorithm to calculate the score.
      */
-    int remedial(std::vector<int> &results)
+    int remedial_greedy(std::vector<int> &results)
     {
         int score = std::accumulate(results.begin(), results.end(), 0, [](int sum, int result)
                                     { return sum + Scores[result]; });
@@ -116,6 +117,44 @@ public:
 
         return score;
     }
+
+    /**
+     * @brief calculate the score of the band after remedial.
+     *
+     * @param results the results of the band members.
+     * @return int the score of the band.
+     * The function will change the results vector, so make sure you know what you are doing.
+     * The function uses random algorithm to calculate the score.
+     */
+    int remedial_random(std::vector<int> &results, Random_Generator &G)
+    {
+        int score = std::accumulate(results.begin(), results.end(), 0, [](int sum, int result)
+                                    { return sum + Scores[result]; });
+        std::vector<int> remedial_candidates;
+        for (int i = 0; i < member_count; i++)
+        {
+            if (results[i] != GREATEST_SUCCESS_ID)
+            {
+                remedial_candidates.push_back(i);
+            }
+        }
+        for (int i = 0; i < remedial_chances; i++)
+        {
+            if (remedial_candidates.empty())
+            {
+                break;
+            }
+            int p = G.get_random(0, remedial_candidates.size() - 1);
+            int member = remedial_candidates[p];
+            score += Scores[results[member] + 1] - Scores[results[member]];
+            results[member]++;
+            if (results[member] == GREATEST_SUCCESS_ID)
+            {
+                remedial_candidates.erase(remedial_candidates.begin() + p);
+            }
+        }
+        return score;
+    }
     /**
      * @brief calculate the score of the band after the live.
      *
@@ -127,12 +166,21 @@ public:
         std::vector<int> performance_results(member_count);
         for (int i = 0; i < member_count; i++)
             performance_results[i] = random_generator.get_result(skill[i] + modifier[i]);
-        double normalized_performance_score = normalize_performance_score(remedial(performance_results));
-        int audience_score = random_generator.get_result(normalized_performance_score);
-        Live_Result live_result(audience_score, normalized_performance_score);
+        double performance_score = remedial_random(performance_results, random_generator);
+        double normalized_performance_score = normalize_performance_score(performance_score);
+        Live_Result live_result(0, normalized_performance_score, normalized_performance_score-performance_score_modifier);
         for (auto &x : other_mechanism)
-            live_result = x(live_result);
+            live_result = x(live_result,0);
+        int audience_score = random_generator.get_result(normalized_performance_score);
+        live_result.audience_score=audience_score;
+        for (auto &x : other_mechanism)
+            live_result = x(live_result,1);
         return live_result;
+    }
+
+    double get_original_performance_score(double normalized_performance_score)
+    {
+        return normalized_performance_score - performance_score_modifier;
     }
 };
 #endif

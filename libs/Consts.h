@@ -20,4 +20,5 @@ const int VERY_HARD_SUCCESS_ID = 4;
 const int GREATEST_SUCCESS_ID = 5;
 const std::string STATUS[]={ "Greatest failure", "Failure", "Normal success", "Hard success", "Very hard success", "Greatest success" };
 const int DEFAULT_MONTCARLO_TIMES = 100000;
+enum class ScoreResult { Win, Draw, Lose };
 #endif

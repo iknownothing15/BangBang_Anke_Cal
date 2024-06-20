@@ -3,6 +3,7 @@
 #include "Band.h"
 #include "Random_Generator.h"
 #include "Interactions.h"
+
 /**
  * @brief give the detailed result of the BangBang game.
  *
@@ -15,26 +16,26 @@
  * [3, 4, 5] means the first band wins, draws, loses in performance score while draws in audience score.
  * [6, 7, 8] means the first band wins, draws, loses in performance score while loses in audience score.
  */
-std::vector<int> BangBang_V(Band A, Band B, Random_Generator &G, int times)
+std::vector<int> BangBang_V(Band &A, Band &B, Random_Generator &G, int times)
 {
     std::vector<int> result(9);
     while (times--)
     {
         Live_Result A_result = A.live(G), B_result = B.live(G);
-        int x, y;
+        ScoreResult x, y;
         if (A_result.audience_score > B_result.audience_score)
-            x = 0;
+            x = ScoreResult::Win;
         else if (A_result.audience_score == B_result.audience_score)
-            x = 1;
+            x = ScoreResult::Draw;
         else
-            x = 2;
+            x = ScoreResult::Lose;
         if (A_result.final_performance_score > B_result.final_performance_score)
-            y = 0;
+            y = ScoreResult::Win;
         else if (A_result.final_performance_score == B_result.final_performance_score)
-            y = 1;
+            y = ScoreResult::Draw;
         else
-            y = 2;
-        result[x * 3 + y]++;
+            y = ScoreResult::Lose;
+        result[static_cast<int>(x) * 3 + static_cast<int>(y)]++;
     }
     return result;
 }
@@ -61,7 +62,7 @@ double BangBang(Band A, Band B, Random_Generator &G, int times)
     return 100.0 * win / times;
 }
 
-double BangBang_over_known_result(Band A,Live_Result B_result, Random_Generator &G, int times)
+double BangBang_over_known_result(Band A, Live_Result B_result, Random_Generator &G, int times)
 {
     int win = 0;
     for (int i = 0; i < times; i++)
@@ -70,5 +71,16 @@ double BangBang_over_known_result(Band A,Live_Result B_result, Random_Generator 
         win += B_result < A_result;
     }
     return 100.0 * win / times;
+}
+
+std::vector<std::vector<Live_Result>> Live_Result_predict(Band &A, Random_Generator &G, int times)
+{
+    std::vector<std::vector<Live_Result>> results(POSSIBLE_RESULT_SIZE);
+    for (int i = 1; i <= times; i++)
+    {
+        Live_Result result = A.live(G);
+        results[result.audience_score].push_back(result);
+    }
+    return results;
 }
 #endif
