@@ -32,7 +32,7 @@ private:
     int member_count;
     std::string name;
     std::vector<int> skill, modifier;
-    std::vector<std::function<Live_Result(Live_Result,int)>> other_mechanism;
+    std::vector<std::function<Live_Result(Live_Result, int)>> other_mechanism;
     int performance_score_modifier, remedial_chances;
     /**
      * @brief A function that will normalize the performance score based on the member count.
@@ -64,13 +64,12 @@ public:
          const std::string &_name,
          const std::vector<int> &_skill,
          const std::vector<int> &_modifier,
-         const std::vector<std::function<Live_Result(Live_Result,int)>> &_other_mechanism,
+         const std::vector<std::function<Live_Result(Live_Result, int)>> &_other_mechanism,
          const int &_performance_score_modifier)
         : member_count(_member_count),
           name(_name),
           skill(_skill),
           modifier(_modifier),
-
           other_mechanism(_other_mechanism),
           performance_score_modifier(_performance_score_modifier),
           remedial_chances(0)
@@ -90,8 +89,16 @@ public:
      * @brief A default constructor.
      *
      */
-
-    Band() : member_count(0), name(""), skill({}), modifier({}), other_mechanism({}), performance_score_modifier(0), remedial_chances(0) {}
+    Band()
+        : member_count(0),
+          name(""),
+          skill({}),
+          modifier({}),
+          other_mechanism({}),
+          performance_score_modifier(0),
+          remedial_chances(0)
+    {
+    }
 
     /**
      * @brief calculate the score of the band after remedial.
@@ -168,13 +175,13 @@ public:
             performance_results[i] = random_generator.get_result(skill[i] + modifier[i]);
         double performance_score = remedial_random(performance_results, random_generator);
         double normalized_performance_score = normalize_performance_score(performance_score);
-        Live_Result live_result(0, normalized_performance_score, normalized_performance_score-performance_score_modifier);
+        Live_Result live_result(0, normalized_performance_score, normalized_performance_score - performance_score_modifier);
         for (auto &x : other_mechanism)
-            live_result = x(live_result,0);
+            live_result = x(live_result, 0);
         int audience_score = random_generator.get_result(normalized_performance_score);
-        live_result.audience_score=audience_score;
+        live_result.audience_score = audience_score;
         for (auto &x : other_mechanism)
-            live_result = x(live_result,1);
+            live_result = x(live_result, 1);
         return live_result;
     }
 
