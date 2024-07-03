@@ -189,5 +189,15 @@ public:
     {
         return normalized_performance_score - performance_score_modifier;
     }
+    
+    std::vector<Live_Result> live_result_dirstribution(Random_Generator &random_generator, int times)
+    {
+        std::vector<Live_Result> results;
+        for (int i = 0; i < times; i++)
+        {
+            results.push_back(live(random_generator));
+        }
+        return results;
+    }
 };
 #endif

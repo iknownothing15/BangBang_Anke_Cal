@@ -200,5 +200,48 @@ namespace Interactions
         }
         return;
     }
+
+    /**
+     * @brief display the distribution of the live result.
+     *
+     * @param band the band to be tested.
+     * @param G a random generator.
+     * @param times over how many times the live will be played.
+     */
+    void show_live_result_dirstribution(Band &band, Random_Generator &G, int times)
+    {
+        std::vector<Live_Result> results = band.live_result_dirstribution(G, times);
+        std::sort(results.begin(), results.end());
+        std::vector<std::vector<int>> cnt(102, std::vector<int>(POSSIBLE_RESULT_SIZE));
+        for (auto &x : results)
+        {
+            int score = x.final_performance_score;
+            if (score >= 100)
+                score = 101;
+            else if (score < 0)
+                score = 0;
+            else
+                score++;
+            cnt[score][x.audience_score]++;
+        }
+        for (int i = 0; i <= 101; i++)
+        {
+            int sum = std::accumulate(cnt[i].begin(), cnt[i].end(), 0);
+            if (sum == 0)
+                continue;
+            if (i == 0)
+                printf("    <0 ");
+            else if (i == 101)
+                printf(" >=100 ");
+            else
+                printf("%6.d ", i - 1);
+            for (int j = 0; j < POSSIBLE_RESULT_SIZE; j++)
+            {
+                if(cnt[i][j]==0)printf("   0 ");
+                else printf("%4.d ", cnt[i][j]);
+            }
+            puts("");
+        }
+    }
 } // namespace Interactions
 #endif
