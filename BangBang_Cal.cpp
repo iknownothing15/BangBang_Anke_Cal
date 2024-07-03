@@ -36,8 +36,8 @@ int main()
     Band RAS(6, "RAS", {90, 80, 80, 85, 75, 70}, {5, 5, 5, 5, 5, 10}, {}, 10);
     Band Roselia(5, "Roselia", {95, 85, 75, 80, 90}, {5, 5, 5, 5, 5}, {}, 30);
     Band SE(3, "SE", {72, 80, 80}, {10, 10, 10}, {Live_modifiers::medium_quality}, 5);
-    // Interactions::show_live_result_dirstribution(SE, G, 100000);
-    Interactions::show_BangBang_result(SE, RAS, G, 100000);
+    Interactions::show_live_result_dirstribution(SE, G, 100000);
+    // Interactions::show_BangBang_result(SE, RAS, G, 100000);
     // Interactions::interactive_UI_main();
     return 0;
 }

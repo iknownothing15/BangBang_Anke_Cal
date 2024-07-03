@@ -178,7 +178,7 @@ public:
         Live_Result live_result(0, normalized_performance_score, normalized_performance_score - performance_score_modifier);
         for (auto &x : other_mechanism)
             live_result = x(live_result, 0);
-        int audience_score = random_generator.get_result(normalized_performance_score);
+        int audience_score = random_generator.get_result(live_result.final_performance_score);
         live_result.audience_score = audience_score;
         for (auto &x : other_mechanism)
             live_result = x(live_result, 1);
