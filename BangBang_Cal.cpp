@@ -7,16 +7,16 @@
  * @date 2024-05-17
  *
  * @warning I'm just a student. If you found something wrong in this program, please don't criticize me too much. TAT
- * 
+ *
  * This reporitory uses the GPLv3 license. Everyone can use it freely.
  *
  * @todo Add a GUI for this program.
  * I currently have no idea of how to do this. Maybe I will use Qt or something else.
  * If you have any good suggestions, please tell me (through email github or something else).
  * By the way, I need an artist to help me design the GUI because I'm not good at drawing. TAT
- * 
- * @todo It seems that I mistakenly write the application in .h file. But I'm too lazy to change it. 
- * So it will be like this. (⊙﹏⊙). 
+ *
+ * @todo It seems that I mistakenly write the application in .h file. But I'm too lazy to change it.
+ * So it will be like this. (⊙﹏⊙).
  * You can fix it by a pull request if you want.
  */
 #include "libs/Band.h"
@@ -35,9 +35,10 @@ int main()
     Random_Generator G;
     Band RAS(6, "RAS", {90, 80, 80, 85, 75, 70}, {5, 5, 5, 5, 5, 10}, {}, 10);
     Band Roselia(5, "Roselia", {95, 85, 75, 80, 90}, {5, 5, 5, 5, 5}, {}, 30);
-    Band SE(3, "SE", {72, 80, 80}, {10, 10, 10}, {Live_modifiers::medium_quality}, 5);
-    Interactions::show_live_result_dirstribution(SE, G, 100000);
-    // Interactions::show_BangBang_result(SE, RAS, G, 100000);
+    Band SE(3, "SE", {72, 80, 80}, {10, 10, 10}, {Live_modifiers::medium_quality}, 0);
+    Band NSE(7, "NSE", {72,80,80,85,80,85,80},{5,5,5,5,5,5,5},{},15);
+    // Interactions::show_live_result_dirstribution(NSE, G, 100000);
+    Interactions::show_BangBang_result(SE, RAS, G, 100000);
     // Interactions::interactive_UI_main();
     return 0;
 }

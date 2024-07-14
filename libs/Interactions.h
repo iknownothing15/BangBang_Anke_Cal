@@ -10,15 +10,28 @@
 #include "Consts.h"
 #include "BangBang.h"
 #include "Live_modifiers.h"
-/**
- * @brief A namespace that contains functions that interact with the user.
- *
- * I'm not going to add clear comments to each function, They are not important.
- *
- * Interactors is not elegant at all. I have no idea of how to make it better.
- * It might be changed into GUI of Qt or dotnet in the future. Hope
- */
-namespace Interactions
+
+// namespace Interactor_Class
+// {
+//     class Interactor_Function
+//     {
+//     private:
+//         std::string desc;
+//         std::function<void(std::vector<Band>, std::vector<Live_Result>, Random_Generator)> func;
+//         int Band_arg_count, Live_Result_arg_count;
+
+//     public:
+//         Interactor_Function(std::string desc, std::function<void(std::vector<Band>, std::vector<Live_Result>)> func, int Band_arg_count, int Live_Result_arg_count)
+//         {
+//             this->desc = desc;
+//             this->func = func;
+//             this->Band_arg_count = Band_arg_count;
+//             this->Live_Result_arg_count = Live_Result_arg_count;
+//         }
+//     }
+// }
+
+namespace Interactor_Utility
 {
     int read_num(std::string desc, int l, int r)
     {
@@ -39,7 +52,6 @@ namespace Interactions
         std::runtime_error("Unreachable code");
         return -1;
     }
-
     std::string read_string(std::string desc)
     {
         std::string s;
@@ -85,6 +97,18 @@ namespace Interactions
 
         return Band(member_count, name, skill, modifier, {}, performance_score_modifier);
     }
+}
+/**
+ * @brief A namespace that contains functions that interact with the user.
+ *
+ * I'm not going to add clear comments to each function, They are not important.
+ *
+ * Interactors is not elegant at all. I have no idea of how to make it better.
+ * It might be changed into GUI of Qt or dotnet in the future. Hope
+ */
+namespace Interactions
+{
+
     void show_result_V(const std::vector<int> &result)
     {
         std::cout << "Winning matrix:" << std::endl;
@@ -156,7 +180,7 @@ namespace Interactions
             desc << "3.show the result of a single live" << std::endl;
             desc << "4.calculate the win rate of two bands" << std::endl;
             desc << "5.calculate the win rate of a band over a known result" << std::endl;
-            int opt = read_num(desc.str(), 0, 5);
+            int opt = Interactor_Utility::read_num(desc.str(), 0, 5);
             // clean the desc
             desc.str("");
             // clean the screen
@@ -166,7 +190,7 @@ namespace Interactions
             case 0:
                 return;
             case 1:
-                Bands.push_back(read_band());
+                Bands.push_back(Interactor_Utility::read_band());
                 std::cout << "The band is added." << std::endl;
                 break;
             case 2:
@@ -175,20 +199,20 @@ namespace Interactions
             case 3:
                 std::cout << "Currently, the bands are:" << std::endl;
                 list_bands(Bands);
-                band1_id = read_num("Please input the id of the first band(1-" + std::to_string(Bands.size()) + "):", 1, Bands.size()) - 1;
+                band1_id = Interactor_Utility::read_num("Please input the id of the first band(1-" + std::to_string(Bands.size()) + "):", 1, Bands.size()) - 1;
                 show_single_live_result(Bands[band1_id], G);
                 break;
             case 4:
                 std::cout << "Currently, the bands are:" << std::endl;
                 list_bands(Bands);
-                band1_id = read_num("Please input the id of the first band(1-" + std::to_string(Bands.size()) + "):", 1, Bands.size()) - 1;
-                band2_id = read_num("Please input the id of the second band(1-" + std::to_string(Bands.size()) + "):", 1, Bands.size()) - 1;
+                band1_id = Interactor_Utility::read_num("Please input the id of the first band(1-" + std::to_string(Bands.size()) + "):", 1, Bands.size()) - 1;
+                band2_id = Interactor_Utility::read_num("Please input the id of the second band(1-" + std::to_string(Bands.size()) + "):", 1, Bands.size()) - 1;
                 show_BangBang_result(Bands[band1_id], Bands[band2_id], G, DEFAULT_MONTCARLO_TIMES);
                 break;
             case 5:
                 list_bands(Bands);
-                band1_id = read_num("Please input the id of the band(1-" + std::to_string(Bands.size()) + "):", 1, Bands.size()) - 1;
-                result = read_live_result();
+                band1_id = Interactor_Utility::read_num("Please input the id of the band(1-" + std::to_string(Bands.size()) + "):", 1, Bands.size()) - 1;
+                result = Interactor_Utility::read_live_result();
                 show_BangBang_over_known_result(Bands[band1_id], result, G, DEFAULT_MONTCARLO_TIMES);
             default:
                 std::runtime_error("Unreachable code");
@@ -215,13 +239,7 @@ namespace Interactions
         std::vector<std::vector<int>> cnt(102, std::vector<int>(POSSIBLE_RESULT_SIZE));
         for (auto &x : results)
         {
-            int score = x.final_performance_score;
-            if (score >= 100)
-                score = 101;
-            else if (score < 0)
-                score = 0;
-            else
-                score++;
+            int score = std::min(101, std::max(0, int(x.final_performance_score) + 1));
             cnt[score][x.audience_score]++;
         }
         for (int i = 0; i <= 101; i++)
@@ -230,18 +248,57 @@ namespace Interactions
             if (sum == 0)
                 continue;
             if (i == 0)
-                printf("    <0 ");
+                printf("    <0,");
             else if (i == 101)
-                printf(" >=100 ");
+                printf(" >=100,");
             else
-                printf("%6.d ", i - 1);
+                printf("%6.d,", i - 1);
             for (int j = 0; j < POSSIBLE_RESULT_SIZE; j++)
             {
-                if(cnt[i][j]==0)printf("   0 ");
-                else printf("%4.d ", cnt[i][j]);
+                if (cnt[i][j] == 0)
+                    printf("   0,");
+                else
+                    printf("%4.d,", cnt[i][j]);
             }
             puts("");
         }
     }
+
+    void show_live_result_dirstribution(Band &band, Random_Generator &G, int times, std::string file_name)
+    {
+        FILE *fp = fopen(file_name.c_str(), "w");
+        if (fp == NULL)
+        {
+            std::cout << "Can't open the file" << std::endl;
+            return;
+        }
+        std::vector<Live_Result> results = band.live_result_dirstribution(G, times);
+        std::sort(results.begin(), results.end());
+        std::vector<std::vector<int>> cnt(102, std::vector<int>(POSSIBLE_RESULT_SIZE));
+        for (auto &x : results)
+        {
+            int score = std::min(101, std::max(0, int(x.final_performance_score) + 1));
+            cnt[score][x.audience_score]++;
+        }
+        // write csv style file
+        for (int i = 0; i <= 101; i++)
+        {
+            int sum = std::accumulate(cnt[i].begin(), cnt[i].end(), 0);
+            if (sum == 0)
+                continue;
+            if (i == 0)
+                fprintf(fp, "<0,");
+            else if (i == 101)
+                fprintf(fp, ">=100,");
+            else
+                fprintf(fp, "%d,", i - 1);
+            for (int j = 0; j < POSSIBLE_RESULT_SIZE; j++)
+            {
+                fprintf(fp, "%d,", cnt[i][j]);
+            }
+            fprintf(fp, "\n");
+        }
+    }
+
 } // namespace Interactions
 #endif
