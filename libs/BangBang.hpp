@@ -1,8 +1,8 @@
-#ifndef BANGBANG_H
-#define BANGBANG_H
-#include "Band.h"
-#include "Random_Generator.h"
-#include "Interactions.h"
+#ifndef BANGBANG_HPP
+#define BANGBANG_HPP
+#include "Band.hpp"
+#include "Random_Generator.hpp"
+#include "Interactions.hpp"
 
 /**
  * @brief give the detailed result of the BangBang game.

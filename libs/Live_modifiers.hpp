@@ -1,7 +1,7 @@
-#ifndef LIVE_MODIFIERS_H
-#define LIVE_MODIFIERS_H
-#include "Live_Result.h"
-#include "Consts.h"
+#ifndef LIVE_MODIFIERS_HPP
+#define LIVE_MODIFIERS_HPP
+#include "Live_Result.hpp"
+#include "Consts.hpp"
 namespace Live_modifiers
 {
     /**

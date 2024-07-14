@@ -1,7 +1,7 @@
-#ifndef LIVE_RESULT_H
-#define LIVE_RESULT_H
+#ifndef LIVE_RESULT_HPP
+#define LIVE_RESULT_HPP
 #include <sstream>
-#include "Consts.h"
+#include "Consts.hpp"
 /**
  * @brief The little struct to store the result of a live.
  *

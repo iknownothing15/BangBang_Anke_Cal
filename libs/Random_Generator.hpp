@@ -1,6 +1,6 @@
-#ifndef RANDOM_GENERATOR_H
-#define RANDOM_GENERATOR_H
-#include "Consts.h"
+#ifndef RANDOM_GENERATOR_HPP
+#define RANDOM_GENERATOR_HPP
+#include "Consts.hpp"
 #include <random>
 #include <ctime>
 class Random_Generator

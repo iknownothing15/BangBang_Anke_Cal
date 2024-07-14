@@ -1,5 +1,5 @@
-#ifndef BangBang_Cal_RE_CONSTS_H
-#define BangBang_Cal_RE_CONSTS_H
+#ifndef BangBang_Cal_RE_CONSTS_HPP
+#define BangBang_Cal_RE_CONSTS_HPP
 #include<string>
 /**
  * @brief The possible results of the game.

@@ -1,14 +1,14 @@
-#ifndef BAND_DS_H
-#define BAND_DS_H
+#ifndef BAND_DS_HPP
+#define BAND_DS_HPP
 #include <vector>
 #include <string>
 #include <numeric>
 #include <algorithm>
 #include <functional>
-#include "Consts.h"
-#include "Live_Result.h"
-#include "Random_Generator.h"
-#include "live_modifiers.h"
+#include "Consts.hpp"
+#include "Live_Result.hpp"
+#include "Random_Generator.hpp"
+#include "live_modifiers.hpp"
 /**
  * @brief The core data structure of the game, representing a band.
  * @param member_count The number of members in the band.

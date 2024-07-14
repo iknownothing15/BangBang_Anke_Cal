@@ -1,15 +1,15 @@
-#ifndef INTERACTIONS_H
-#define INTERACTIONS_H
+#ifndef INTERACTIONS_HPP
+#define INTERACTIONS_HPP
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <stdexcept>
-#include "Band.h"
-#include "Consts.h"
-#include "BangBang.h"
-#include "Live_modifiers.h"
+#include "Band.hpp"
+#include "Consts.hpp"
+#include "BangBang.hpp"
+#include "Live_modifiers.hpp"
 
 // namespace Interactor_Class
 // {
