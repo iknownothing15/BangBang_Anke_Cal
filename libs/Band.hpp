@@ -9,6 +9,7 @@
 #include "Live_Result.hpp"
 #include "Random_Generator.hpp"
 #include "live_modifiers.hpp"
+#include "Interactor.hpp"
 /**
  * @brief The core data structure of the game, representing a band.
  * @param member_count The number of members in the band.
@@ -199,5 +200,6 @@ public:
         }
         return results;
     }
+    friend class Interactor_IO;
 };
 #endif

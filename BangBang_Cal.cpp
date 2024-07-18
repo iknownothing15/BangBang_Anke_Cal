@@ -19,10 +19,10 @@
  * So it will be like this. (⊙﹏⊙).
  * You can fix it by a pull request if you want.
  */
-#include "libs/Band.h"
-#include "libs/Interactions.h"
-#include "libs/BangBang.h"
-#include "libs/Live_modifiers.h"
+#include "libs/Band.hpp"
+#include "libs/Interactions.hpp"
+#include "libs/BangBang.hpp"
+#include "libs/Live_modifiers.hpp"
 /**
  * @brief here is the main function.
  * I give some examples here.
